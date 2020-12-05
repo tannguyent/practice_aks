@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-api-deployment
+  labels:
+    app: node-api
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name:  node-api
+      labels:
+        app: node-api
+    spec:
+      containers:
+      - name: node-api
+        image: localhost:5000/node-api.local
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PORT
+          value: "80"
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: node-api
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  node-api-service
+spec:
+  selector:
+    app: node-api
+  type:  NodePort
+  ports:
+  - port:  80
